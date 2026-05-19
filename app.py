@@ -261,6 +261,18 @@ def inject_styles() -> None:
             border-top: 1px solid rgba(19, 38, 58, 0.05);
             margin-top: 0.8rem;
           }
+
+          /* Force all stRadio text, options, and widget labels to be dark for readability */
+          div[data-testid="stRadio"] label, 
+          div[data-testid="stRadio"] [data-testid="stWidgetLabel"] p,
+          div[data-testid="stRadio"] [data-testid="stMarkdownContainer"] p,
+          div[data-testid="stRadio"] p,
+          div[data-testid="stRadio"] span,
+          div[data-testid="stRadio"] label p,
+          div[data-testid="stRadio"] [role="radiogroup"] label * {
+            color: var(--ink) !important;
+            font-weight: 600 !important;
+          }
         </style>
         """,
         unsafe_allow_html=True,
