@@ -641,6 +641,7 @@ def render_source_tab(settings: GenerationSettings) -> None:
                         st.session_state.questions_editor = questions_to_editor_text(questions)
                         st.session_state.question_source = source_label
                         st.success(f"Loaded {len(questions)} question(s) using {source_label.lower()}.")
+                        st.info("👉 **Next Step**: Click on the **'Review questions'** tab at the top of the page to review them, or go straight to the **'Generate pages'** tab to generate the answers!")
                     else:
                         st.error("No questions were detected. Paste them manually or try a clearer PDF.")
 
@@ -667,6 +668,7 @@ def render_source_tab(settings: GenerationSettings) -> None:
                 st.session_state.questions_editor = questions_to_editor_text(questions[: settings.max_questions])
                 st.session_state.question_source = "Manual input"
                 st.success(f"Loaded {len(questions[: settings.max_questions])} question(s) from pasted text.")
+                st.info("👉 **Next Step**: Click on the **'Review questions'** tab at the top of the page to review them, or go straight to the **'Generate pages'** tab to generate the answers!")
             else:
                 st.error("No valid questions were found in the pasted text.")
 
@@ -703,6 +705,7 @@ def render_review_tab() -> list[str]:
     if questions:
         preview_rows = "\n".join(f"{idx}. {question}" for idx, question in enumerate(questions[:5], start=1))
         st.code(preview_rows, language="text")
+        st.info("👉 **Next Step**: Click on the **'Generate pages'** tab at the top of the page, then click the **'Generate handwritten answer pack'** button to answer these questions!")
     else:
         st.info("Questions will appear here after PDF extraction or manual paste.")
 
