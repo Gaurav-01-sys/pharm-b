@@ -14,9 +14,9 @@ import streamlit as st
 from openai import OpenAI
 from PIL import Image, ImageDraw, ImageFont
 
-TOGETHER_BASE_URL = "https://api.together.xyz/v1"
-ANSWER_MODEL = "epfl-llm/meditron-70b"
-PARSER_MODEL = "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+ANSWER_MODEL = "llama-3.3-70b-versatile"
+PARSER_MODEL = "llama-3.3-70b-versatile"
 
 PAGE_W = 900
 PAGE_H = 1180
@@ -243,8 +243,8 @@ def reset_workspace() -> None:
     reset_generated_content()
 
 
-def together_client(api_key: str) -> OpenAI:
-    return OpenAI(api_key=api_key, base_url=TOGETHER_BASE_URL)
+def groq_client(api_key: str) -> OpenAI:
+    return OpenAI(api_key=api_key, base_url=GROQ_BASE_URL)
 
 
 @st.cache_data(show_spinner=False)
@@ -532,12 +532,12 @@ def render_sidebar() -> GenerationSettings:
         # Retrieve the API key securely from secrets or environment variables in the background
         api_key = ""
         try:
-            if "TOGETHER_API_KEY" in st.secrets:
-                api_key = st.secrets["TOGETHER_API_KEY"]
+            if "GROQ_API_KEY" in st.secrets:
+                api_key = st.secrets["GROQ_API_KEY"]
         except Exception:
             pass
         if not api_key:
-            api_key = os.getenv("TOGETHER_API_KEY", "")
+            api_key = os.getenv("GROQ_API_KEY", "")
             
         st.session_state.api_key = api_key
 
@@ -625,7 +625,7 @@ def render_source_tab(settings: GenerationSettings) -> None:
                     questions: list[str]
                     source_label: str
                     if settings.api_key:
-                        client = together_client(settings.api_key)
+                        client = groq_client(settings.api_key)
                         try:
                             questions = parse_questions_with_model(raw_text, client, settings.max_questions)
                             source_label = "Model parser"
@@ -719,12 +719,12 @@ def render_generation_tab(settings: GenerationSettings, questions: list[str]) ->
         return
 
     if not settings.api_key:
-        st.warning("Add a Together AI API key in the sidebar to generate answers.")
+        st.warning("Please configure your GROQ_API_KEY in Streamlit Secrets (.streamlit/secrets.toml) or as an environment variable to generate answers.")
 
     start_disabled = not settings.api_key
     if st.button("Generate handwritten answer pack", use_container_width=True, disabled=start_disabled):
         reset_generated_content()
-        client = together_client(settings.api_key)
+        client = groq_client(settings.api_key)
         progress = st.progress(0.0)
         status = st.empty()
         answer_records: list[dict[str, str]] = []
