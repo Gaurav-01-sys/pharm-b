@@ -214,6 +214,10 @@ def inject_styles() -> None:
 
 
 def init_state() -> None:
+    if "session_initialized" not in st.session_state:
+        st.session_state.clear()
+        st.session_state["session_initialized"] = True
+
     defaults = {
         "questions_editor": "",
         "raw_text": "",
