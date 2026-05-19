@@ -2,3 +2,4 @@ __pycache__/
 .python_deps/
 *.pyc
 .git/
+.streamlit/secrets.toml

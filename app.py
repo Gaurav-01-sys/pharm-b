@@ -528,7 +528,15 @@ def sync_uploaded_file(uploaded_file: st.runtime.uploaded_file_manager.UploadedF
 def render_sidebar() -> GenerationSettings:
     with st.sidebar:
         st.markdown("## Studio Settings")
-        initial_key = st.session_state.get("api_key", os.getenv("TOGETHER_API_KEY", ""))
+        default_key = ""
+        try:
+            if "TOGETHER_API_KEY" in st.secrets:
+                default_key = st.secrets["TOGETHER_API_KEY"]
+        except Exception:
+            pass
+        if not default_key:
+            default_key = os.getenv("TOGETHER_API_KEY", "")
+        initial_key = st.session_state.get("api_key", default_key)
         api_key = st.text_input("Together AI API key", value=initial_key, type="password")
         st.session_state.api_key = api_key
 
