@@ -528,19 +528,19 @@ def sync_uploaded_file(uploaded_file: st.runtime.uploaded_file_manager.UploadedF
 def render_sidebar() -> GenerationSettings:
     with st.sidebar:
         st.markdown("## Studio Settings")
-        default_key = ""
+        
+        # Retrieve the API key securely from secrets or environment variables in the background
+        api_key = ""
         try:
             if "TOGETHER_API_KEY" in st.secrets:
-                default_key = st.secrets["TOGETHER_API_KEY"]
+                api_key = st.secrets["TOGETHER_API_KEY"]
         except Exception:
             pass
-        if not default_key:
-            default_key = os.getenv("TOGETHER_API_KEY", "")
-        initial_key = st.session_state.get("api_key", default_key)
-        api_key = st.text_input("Together AI API key", value=initial_key, type="password")
+        if not api_key:
+            api_key = os.getenv("TOGETHER_API_KEY", "")
+            
         st.session_state.api_key = api_key
 
-        st.divider()
         subject = st.text_input("Subject or topic", placeholder="Pharmacology, pathology, anatomy")
         detail = st.selectbox("Answer depth", ["Brief", "Moderate", "Detailed"], index=1)
         tone = st.selectbox("Writing style", ["Exam ready", "Simple", "Clinical"], index=0)
@@ -552,7 +552,6 @@ def render_sidebar() -> GenerationSettings:
             st.rerun()
 
         st.caption(
-            "Bring your own Together AI key for parsing and answer generation. "
             "PDF extraction works locally, and question parsing can fall back to a local heuristic."
         )
 
