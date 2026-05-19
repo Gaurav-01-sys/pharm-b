@@ -273,6 +273,16 @@ def inject_styles() -> None:
             color: var(--ink) !important;
             font-weight: 600 !important;
           }
+
+          /* Globally force all widget labels and file uploader texts in the main workspace to be dark */
+          .stApp [data-testid="stMain"] label,
+          .stApp [data-testid="stMain"] [data-testid="stWidgetLabel"] p,
+          .stApp [data-testid="stMain"] [data-testid="stFileUploader"] *,
+          .stApp [data-testid="stMain"] [data-testid="stFileUploader"] span,
+          .stApp [data-testid="stMain"] [data-testid="stFileUploader"] p {
+            color: var(--ink) !important;
+            font-weight: 600 !important;
+          }
         </style>
         """,
         unsafe_allow_html=True,
