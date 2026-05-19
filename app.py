@@ -662,9 +662,17 @@ def render_header(question_count: int, page_count: int, source_name: str) -> Non
 
 def render_source_tab(settings: GenerationSettings) -> None:
     st.markdown('<div class="panel-card">', unsafe_allow_html=True)
-    left, right = st.columns([1.1, 0.9])
+    
+    # Elegant custom choice for input source
+    input_method = st.radio(
+        "Choose how you want to load your questions:",
+        ["📄 Upload PDF Document", "✍️ Copy & Paste Questions Directly"],
+        horizontal=True,
+    )
+    
+    st.divider()
 
-    with left:
+    if input_method == "📄 Upload PDF Document":
         uploaded = st.file_uploader("Upload a PDF question paper", type=["pdf"])
         sync_uploaded_file(uploaded)
 
@@ -711,11 +719,12 @@ def render_source_tab(settings: GenerationSettings) -> None:
                     height=240,
                     label_visibility="collapsed",
                 )
-
-    with right:
+    
+    else:
+        # Beautiful, dedicated copy/paste text area
         manual_text = st.text_area(
-            "Or paste questions directly",
-            height=320,
+            "Paste your questions here (one question per line or numbered)",
+            height=300,
             placeholder="1. Define shock.\n2. List the causes of jaundice.\n3. Explain the mechanism of action of aspirin.",
         )
 
@@ -729,11 +738,6 @@ def render_source_tab(settings: GenerationSettings) -> None:
                 st.info("👉 **Next Step**: Click on the **'Review questions'** tab at the top of the page to review them, or go straight to the **'Generate pages'** tab to generate the answers!")
             else:
                 st.error("No valid questions were found in the pasted text.")
-
-        st.info(
-            "Tip: if you do not have an API key yet, you can still extract PDF text and build the question list. "
-            "The API key is only required for model parsing and answer generation."
-        )
 
     st.markdown("</div>", unsafe_allow_html=True)
 
